@@ -1,4 +1,4 @@
-## Project Setup Guide
+## Distribution Management System (DMS) Setup Guide
 
 This README provides complete instructions for installing dependencies, running, and building the project.
 
