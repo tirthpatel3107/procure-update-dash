@@ -26,16 +26,6 @@ npm i
 npm run dev
 ```
 
-Follow these steps to setup the Project in your local and run:
-
-```sh
-# Step 1: Install the necessary dependencies.
-npm i
-
-# Step 2: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
 ## What technologies are used for this project?
 
 This project is built with:

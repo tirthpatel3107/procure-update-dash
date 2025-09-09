@@ -24,10 +24,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const defaultUser: User = {
   id: "user-1",
-  name: "John Doe",
-  email: "john.doe@storepro.com",
-  avatar:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+  name: "Vimarsh C",
+  email: "vimarsh.ead@gmail.com",
+  avatar: null,
   role: "Store Manager",
 };
 
@@ -40,12 +39,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateProductStock = (productId: string, newStock: number) => {
     setProducts((prev) => {
       const updated = prev.map((product) =>
-        product.id === productId ? { ...product, stock: newStock } : product,
+        product.id === productId ? { ...product, stock: newStock } : product
       );
 
       const updatedProduct = updated.find((p) => p.id === productId);
       console.log(
-        `Context: Updated ${updatedProduct?.name} stock to ${newStock}`,
+        `Context: Updated ${updatedProduct?.name} stock to ${newStock}`
       );
       return updated;
     });

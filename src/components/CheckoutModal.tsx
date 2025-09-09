@@ -216,7 +216,7 @@ export default function CheckoutModal({
                 <Label htmlFor="cardholderName">Cardholder Name</Label>
                 <Input
                   id="cardholderName"
-                  placeholder="John Doe"
+                  placeholder="Full Name"
                   value={paymentInfo.cardholderName}
                   onChange={(e) =>
                     handleInputChange("cardholderName", e.target.value)

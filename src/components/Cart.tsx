@@ -80,7 +80,7 @@ export default function Cart({
                     {item.product.name}
                   </h4>
                   {item.product.stock < 5 && (
-                    <p className="text-xs text-orange-600 mb-1">
+                    <p className="text-xs text-warning mb-1">
                       Only {item.product.stock} left in stock
                     </p>
                   )}
