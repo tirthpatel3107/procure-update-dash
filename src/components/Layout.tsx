@@ -20,8 +20,7 @@ export default function Layout() {
         <div className="container flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-primary"></div>
-            <span className="text-xl font-bold">StorePro</span>
+            <span className="text-xl font-bold">DMS</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -37,7 +36,7 @@ export default function Layout() {
                       "hover:bg-accent hover:text-accent-foreground",
                       isActive
                         ? "bg-primary text-primary-foreground shadow-soft"
-                        : "text-muted-foreground",
+                        : "text-muted-foreground"
                     )
                   }
                 >
@@ -78,7 +77,7 @@ export default function Layout() {
                       "hover:bg-accent hover:text-accent-foreground",
                       isActive
                         ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground",
+                        : "text-muted-foreground"
                     )
                   }
                 >

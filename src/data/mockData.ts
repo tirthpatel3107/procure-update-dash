@@ -1,12 +1,18 @@
 import { Product, Order } from "@/types";
 
+import WirelessHeadphoneImage from "../assets/images/wireless-headphone.jpg";
+import AppleSeriesImage from "../assets/images/apple-series.webp";
+import PowerBankImage from "../assets/images/powerbank.webp";
+import UsbTypeCImage from "../assets/images/usb-type-c.jpg";
+import WirelessChargingPadImage from "../assets/images/wireless-charging-pad.webp";
+import WaterproofBluetoothImage from "../assets/images/waterproof-bluetooth.jpg";
+
 export const mockProducts: Product[] = [
   {
     id: "1",
     name: "Wireless Bluetooth Headphones",
     price: 79.99,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
+    image: WirelessHeadphoneImage,
     stock: 25,
     description: "Premium wireless headphones with noise cancellation",
   },
@@ -14,8 +20,7 @@ export const mockProducts: Product[] = [
     id: "2",
     name: "Smart Watch Series 5",
     price: 299.99,
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
+    image: AppleSeriesImage,
     stock: 12,
     description: "Advanced fitness tracking and health monitoring",
   },
@@ -23,8 +28,7 @@ export const mockProducts: Product[] = [
     id: "3",
     name: "Portable Power Bank",
     price: 39.99,
-    image:
-      "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=300&fit=crop",
+    image: PowerBankImage,
     stock: 45,
     description: "20,000mAh fast charging power bank",
   },
@@ -32,8 +36,7 @@ export const mockProducts: Product[] = [
     id: "4",
     name: "USB-C Hub Adapter",
     price: 49.99,
-    image:
-      "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=300&fit=crop",
+    image: UsbTypeCImage,
     stock: 8,
     description: "Multi-port USB-C hub with HDMI and ethernet",
   },
@@ -41,8 +44,7 @@ export const mockProducts: Product[] = [
     id: "5",
     name: "Wireless Charging Pad",
     price: 24.99,
-    image:
-      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=300&fit=crop",
+    image: WirelessChargingPadImage,
     stock: 33,
     description: "15W fast wireless charging pad",
   },
@@ -50,8 +52,7 @@ export const mockProducts: Product[] = [
     id: "6",
     name: "Bluetooth Speaker",
     price: 89.99,
-    image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=300&fit=crop",
+    image: WaterproofBluetoothImage,
     stock: 19,
     description: "Waterproof portable bluetooth speaker",
   },
