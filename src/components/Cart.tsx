@@ -53,55 +53,59 @@ export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCar
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {items.map((item) => (
-              <div key={item.product.id} className="flex items-center space-x-4 p-4 bg-background rounded-lg border">
+              <div key={item.product.id} className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 p-4 bg-background rounded-lg border">
                 <img
                   src={item.product.image}
                   alt={item.product.name}
-                  className="h-16 w-16 object-cover rounded-md"
+                  className="h-16 w-16 object-cover rounded-md flex-shrink-0"
                 />
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 w-full sm:w-auto">
                   <h4 className="font-medium truncate">{item.product.name}</h4>
                   <p className="text-sm text-muted-foreground">
                     ${item.product.price.toFixed(2)} each
                   </p>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => handleQuantityChange(item.product.id, -1)}
-                    disabled={item.quantity <= 1}
-                  >
-                    -
-                  </Button>
-                  <span className="w-8 text-center font-medium">{item.quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => handleQuantityChange(item.product.id, 1)}
-                    disabled={item.quantity >= item.product.stock}
-                  >
-                    +
-                  </Button>
-                </div>
+                <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => handleQuantityChange(item.product.id, -1)}
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </Button>
+                    <span className="w-8 text-center font-medium">{item.quantity}</span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => handleQuantityChange(item.product.id, 1)}
+                      disabled={item.quantity >= item.product.stock}
+                    >
+                      +
+                    </Button>
+                  </div>
 
-                <div className="text-right">
-                  <p className="font-semibold">
-                    ${(item.product.price * item.quantity).toFixed(2)}
-                  </p>
-                </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <p className="font-semibold">
+                        ${(item.product.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-destructive hover:text-destructive"
-                  onClick={() => onRemoveItem(item.product.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      onClick={() => onRemoveItem(item.product.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

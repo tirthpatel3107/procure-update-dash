@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BarChart3, Save, Upload, AlertTriangle, CheckCircle } from "lucide-react";
+import { BarChart3, Save, Upload, AlertTriangle, CheckCircle, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,9 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "@/hooks/use-toast";
-import { mockProducts } from "@/data/mockData";
+import { useAppContext } from "@/context/AppContext";
 import { StockUpdate as StockUpdateType } from "@/types";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const reasonOptions = [
   { value: "loadout", label: "Loadout" },
@@ -24,13 +28,14 @@ export default function StockUpdate() {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [updateQuantity, setUpdateQuantity] = useState("");
   const [reason, setReason] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [shift, setShift] = useState("day");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingUpdate, setPendingUpdate] = useState<StockUpdateType | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const selectedProduct = mockProducts.find(p => p.id === selectedProductId);
+  
+  const { products, currentUser, updateProductStock, addStockUpdate } = useAppContext();
+  const selectedProduct = products.find(p => p.id === selectedProductId);
   const currentBalance = selectedProduct?.stock || 0;
   const updateQty = parseInt(updateQuantity) || 0;
   const newBalance = currentBalance + updateQty;
@@ -54,7 +59,7 @@ export default function StockUpdate() {
       newErrors.reason = "Please select a reason";
     }
 
-    if (!date) {
+    if (!selectedDate) {
       newErrors.date = "Please select a date";
     }
 
@@ -80,8 +85,10 @@ export default function StockUpdate() {
       updateQuantity: updateQty,
       newBalance,
       reason: reason as any,
-      date,
-      shift
+      date: selectedDate.toISOString().split('T')[0],
+      shift,
+      updatedBy: currentUser.name,
+      updatedAt: new Date().toISOString()
     };
 
     setPendingUpdate(update);
@@ -89,6 +96,14 @@ export default function StockUpdate() {
   };
 
   const handleConfirmUpdate = () => {
+    if (!pendingUpdate) return;
+    
+    // Update product stock in global state
+    updateProductStock(pendingUpdate.productId, pendingUpdate.newBalance);
+    
+    // Add stock update record
+    addStockUpdate(pendingUpdate);
+    
     // Simulate API call
     setTimeout(() => {
       setShowConfirmation(false);
@@ -98,13 +113,13 @@ export default function StockUpdate() {
       setSelectedProductId("");
       setUpdateQuantity("");
       setReason("");
-      setDate(new Date().toISOString().split('T')[0]);
+      setSelectedDate(new Date());
       setShift("day");
       setErrors({});
 
       toast({
         title: "Stock Updated Successfully",
-        description: `${selectedProduct?.name} stock updated to ${newBalance} units`,
+        description: `${selectedProduct?.name} stock updated to ${pendingUpdate.newBalance} units`,
       });
     }, 1500);
   };
@@ -146,7 +161,7 @@ export default function StockUpdate() {
                         <SelectValue placeholder="Search and select a product..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {mockProducts.map((product) => (
+                        {products.map((product) => (
                           <SelectItem key={product.id} value={product.id}>
                             <div className="flex items-center justify-between w-full">
                               <span>{product.name}</span>
@@ -215,13 +230,30 @@ export default function StockUpdate() {
                   {/* Date */}
                   <div className="space-y-2">
                     <Label htmlFor="date">Date *</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      className={errors.date ? "border-destructive" : ""}
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !selectedDate && "text-muted-foreground",
+                            errors.date ? "border-destructive" : ""
+                          )}
+                        >
+                          {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => date && setSelectedDate(date)}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
                     {errors.date && (
                       <p className="text-sm text-destructive">{errors.date}</p>
                     )}
@@ -320,8 +352,9 @@ export default function StockUpdate() {
 
                     <div className="text-xs text-muted-foreground">
                       <p><strong>Reason:</strong> {reason ? reasonOptions.find(r => r.value === reason)?.label : 'Not selected'}</p>
-                      <p><strong>Date:</strong> {date || 'Not selected'}</p>
+                      <p><strong>Date:</strong> {selectedDate ? format(selectedDate, "PPP") : 'Not selected'}</p>
                       <p><strong>Shift:</strong> {shift.charAt(0).toUpperCase() + shift.slice(1)}</p>
+                      <p><strong>Updated by:</strong> {currentUser.name}</p>
                     </div>
                   </div>
                 ) : (

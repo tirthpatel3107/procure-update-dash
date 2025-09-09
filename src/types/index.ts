@@ -19,6 +19,8 @@ export interface Order {
   status: 'pending' | 'processing' | 'completed' | 'cancelled';
   date: string;
   paymentMethod: string;
+  customerName?: string;
+  customerEmail?: string;
 }
 
 export interface StockUpdate {
@@ -31,6 +33,8 @@ export interface StockUpdate {
   reason: 'loadout' | 'return' | 'damage' | 'adjustment' | 'closing-balance';
   date: string;
   shift: string;
+  updatedBy?: string;
+  updatedAt?: string;
 }
 
 export interface PaymentInfo {

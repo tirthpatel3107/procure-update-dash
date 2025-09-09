@@ -3,10 +3,11 @@ import { ShoppingBag } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import Cart from "@/components/Cart";
 import { CartItem } from "@/types";
-import { mockProducts } from "@/data/mockData";
+import { useAppContext } from "@/context/AppContext";
 
 export default function PlaceOrder() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { products } = useAppContext();
 
   const addToCart = (newItem: CartItem) => {
     setCartItems(prev => {
@@ -67,7 +68,7 @@ export default function PlaceOrder() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {mockProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}

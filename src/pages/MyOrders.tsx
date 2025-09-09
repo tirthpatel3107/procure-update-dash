@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Package, Search, Calendar, Filter, Eye } from "lucide-react";
+import { Package, Search, Calendar, Filter, Eye, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Order } from "@/types";
-import { mockOrders } from "@/data/mockData";
+import { useAppContext } from "@/context/AppContext";
 
 export default function MyOrders() {
-  const [orders] = useState<Order[]>(mockOrders);
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(mockOrders);
+  const { orders } = useAppContext();
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -137,6 +137,13 @@ export default function MyOrders() {
                       </Badge>
                     </div>
                     
+                    {order.customerName && (
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <User className="h-4 w-4 mr-1" />
+                        <span>Customer: {order.customerName}</span>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
@@ -212,6 +219,18 @@ export default function MyOrders() {
                     <label className="text-sm font-medium text-muted-foreground">Total Amount</label>
                     <p className="text-sm font-semibold">${selectedOrder.total.toFixed(2)}</p>
                   </div>
+                  {selectedOrder.customerName && (
+                    <>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Customer Name</label>
+                        <p className="text-sm">{selectedOrder.customerName}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Customer Email</label>
+                        <p className="text-sm">{selectedOrder.customerEmail}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <Separator />

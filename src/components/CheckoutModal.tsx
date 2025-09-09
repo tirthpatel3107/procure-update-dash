@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CartItem, PaymentInfo } from "@/types";
+import { CartItem, PaymentInfo, Order } from "@/types";
+import { useAppContext } from "@/context/AppContext";
 import { toast } from "@/hooks/use-toast";
 
 interface CheckoutModalProps {
@@ -31,6 +32,7 @@ export default function CheckoutModal({
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const { addOrder, currentUser } = useAppContext();
 
   const handleInputChange = (field: keyof PaymentInfo, value: string) => {
     setPaymentInfo(prev => ({ ...prev, [field]: value }));
@@ -87,9 +89,22 @@ export default function CheckoutModal({
   const handleConfirmOrder = async () => {
     setIsProcessing(true);
     
+    // Create new order
+    const newOrder: Order = {
+      id: `ORD-${Date.now()}`,
+      items,
+      total,
+      status: 'pending',
+      date: new Date().toISOString(),
+      paymentMethod: `**** ${paymentInfo.cardNumber.slice(-4)}`,
+      customerName: paymentInfo.cardholderName,
+      customerEmail: currentUser.email
+    };
+    
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     
+    addOrder(newOrder);
     setIsProcessing(false);
     setShowConfirmation(false);
     onConfirm();
