@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShoppingBag } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import Cart from "@/components/Cart";
@@ -43,6 +43,26 @@ export default function PlaceOrder() {
     setCartItems([]);
   };
 
+  // Sync cart items with current product stock
+  useEffect(() => {
+    setCartItems(prev => 
+      prev.map(cartItem => {
+        const currentProduct = products.find(p => p.id === cartItem.product.id);
+        if (currentProduct) {
+          return {
+            ...cartItem,
+            product: currentProduct,
+            quantity: Math.min(cartItem.quantity, currentProduct.stock)
+          };
+        }
+        return cartItem;
+      }).filter(cartItem => {
+        const currentProduct = products.find(p => p.id === cartItem.product.id);
+        return currentProduct && currentProduct.stock > 0;
+      })
+    );
+  }, [products]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-8">
@@ -64,6 +84,9 @@ export default function PlaceOrder() {
               <h2 className="text-2xl font-bold mb-2">Featured Products</h2>
               <p className="text-muted-foreground">
                 Discover our latest tech essentials with competitive pricing
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Stock levels are updated in real-time from inventory management
               </p>
             </div>
             

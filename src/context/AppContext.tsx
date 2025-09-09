@@ -37,13 +37,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentUser] = useState<User>(defaultUser);
 
   const updateProductStock = (productId: string, newStock: number) => {
-    setProducts(prev => 
-      prev.map(product => 
+    setProducts(prev => {
+      const updated = prev.map(product => 
         product.id === productId 
           ? { ...product, stock: newStock }
           : product
-      )
-    );
+      );
+
+      const updatedProduct = updated.find(p => p.id === productId);
+      console.log(`Context: Updated ${updatedProduct?.name} stock to ${newStock}`);
+      return updated;
+    });
   };
 
   const addOrder = (order: Order) => {

@@ -13,6 +13,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
+  
+  console.log(`ProductCard: ${product.name} stock is ${product.stock}`);
 
   const handleAddToCart = () => {
     if (quantity > product.stock) {

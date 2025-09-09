@@ -59,9 +59,14 @@ export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCar
                   alt={item.product.name}
                   className="h-16 w-16 object-cover rounded-md flex-shrink-0"
                 />
-                <div className="flex-1 min-w-0 w-full sm:w-auto">
-                  <h4 className="font-medium truncate mb-2">{item.product.name}</h4>
-                  <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
+                        <div className="flex-1 min-w-0 w-full sm:w-auto">
+                          <h4 className="font-medium truncate mb-2">{item.product.name}</h4>
+                          {item.product.stock < 5 && (
+                            <p className="text-xs text-orange-600 mb-1">
+                              Only {item.product.stock} left in stock
+                            </p>
+                          )}
+                          <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="outline"

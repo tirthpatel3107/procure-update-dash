@@ -32,7 +32,7 @@ export default function CheckoutModal({
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const { addOrder, currentUser } = useAppContext();
+  const { addOrder, currentUser, updateProductStock } = useAppContext();
 
   const handleInputChange = (field: keyof PaymentInfo, value: string) => {
     setPaymentInfo(prev => ({ ...prev, [field]: value }));
@@ -89,6 +89,18 @@ export default function CheckoutModal({
   const handleConfirmOrder = async () => {
     setIsProcessing(true);
     
+    // Check stock availability before creating order
+    const stockIssues = items.filter(item => item.quantity > item.product.stock);
+    if (stockIssues.length > 0) {
+      setIsProcessing(false);
+      toast({
+        title: "Insufficient Stock",
+        description: `Some items are no longer available in the requested quantities. Please update your cart.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     // Create new order
     const newOrder: Order = {
       id: `ORD-${Date.now()}`,
@@ -101,8 +113,19 @@ export default function CheckoutModal({
       customerEmail: currentUser.email
     };
     
+    // Debug: Log order creation
+    console.log('Creating new order:', newOrder);
+    
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Reduce stock for each item in the order
+    items.forEach(item => {
+      const currentStock = item.product.stock;
+      const newStock = currentStock - item.quantity;
+      updateProductStock(item.product.id, newStock);
+      console.log(`Reduced stock for ${item.product.name}: ${currentStock} → ${newStock}`);
+    });
     
     addOrder(newOrder);
     setIsProcessing(false);
