@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { CreditCard, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -17,140 +22,144 @@ interface CheckoutModalProps {
   onConfirm: () => void;
 }
 
-export default function CheckoutModal({ 
-  isOpen, 
-  onClose, 
-  items, 
-  total, 
-  onConfirm 
+export default function CheckoutModal({
+  isOpen,
+  onClose,
+  items,
+  total,
+  onConfirm,
 }: CheckoutModalProps) {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     cardholderName: "",
     cardNumber: "",
     expiryDate: "",
-    cvv: ""
+    cvv: "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { addOrder, currentUser, updateProductStock } = useAppContext();
 
   const handleInputChange = (field: keyof PaymentInfo, value: string) => {
-    setPaymentInfo(prev => ({ ...prev, [field]: value }));
+    setPaymentInfo((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateForm = () => {
     const { cardholderName, cardNumber, expiryDate, cvv } = paymentInfo;
-    
+
     if (!cardholderName.trim()) {
       toast({
         title: "Invalid Input",
         description: "Please enter cardholder name",
-        variant: "destructive"
+        variant: "destructive",
       });
       return false;
     }
-    
+
     if (cardNumber.replace(/\s/g, "").length !== 16) {
       toast({
-        title: "Invalid Input", 
+        title: "Invalid Input",
         description: "Please enter a valid 16-digit card number",
-        variant: "destructive"
+        variant: "destructive",
       });
       return false;
     }
-    
+
     if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
       toast({
         title: "Invalid Input",
         description: "Please enter expiry date in MM/YY format",
-        variant: "destructive"
+        variant: "destructive",
       });
       return false;
     }
-    
+
     if (cvv.length !== 3) {
       toast({
         title: "Invalid Input",
         description: "Please enter a valid 3-digit CVV",
-        variant: "destructive"
+        variant: "destructive",
       });
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
+
     setShowConfirmation(true);
   };
 
   const handleConfirmOrder = async () => {
     setIsProcessing(true);
-    
+
     // Check stock availability before creating order
-    const stockIssues = items.filter(item => item.quantity > item.product.stock);
+    const stockIssues = items.filter(
+      (item) => item.quantity > item.product.stock,
+    );
     if (stockIssues.length > 0) {
       setIsProcessing(false);
       toast({
         title: "Insufficient Stock",
         description: `Some items are no longer available in the requested quantities. Please update your cart.`,
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     // Create new order
     const newOrder: Order = {
       id: `ORD-${Date.now()}`,
       items,
       total,
-      status: 'pending',
+      status: "pending",
       date: new Date().toISOString(),
       paymentMethod: `**** ${paymentInfo.cardNumber.slice(-4)}`,
       customerName: paymentInfo.cardholderName,
-      customerEmail: currentUser.email
+      customerEmail: currentUser.email,
     };
-    
+
     // Debug: Log order creation
-    console.log('Creating new order:', newOrder);
-    
+    console.log("Creating new order:", newOrder);
+
     // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     // Reduce stock for each item in the order
-    items.forEach(item => {
+    items.forEach((item) => {
       const currentStock = item.product.stock;
       const newStock = currentStock - item.quantity;
       updateProductStock(item.product.id, newStock);
-      console.log(`Reduced stock for ${item.product.name}: ${currentStock} → ${newStock}`);
+      console.log(
+        `Reduced stock for ${item.product.name}: ${currentStock} → ${newStock}`,
+      );
     });
-    
+
     addOrder(newOrder);
     setIsProcessing(false);
     setShowConfirmation(false);
     onConfirm();
     onClose();
-    
+
     toast({
       title: "Order Placed Successfully!",
       description: "You will receive a confirmation email shortly.",
     });
-    
+
     // Reset form
     setPaymentInfo({
       cardholderName: "",
       cardNumber: "",
       expiryDate: "",
-      cvv: ""
+      cvv: "",
     });
   };
 
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || "";
+    const match = (matches && matches[0]) || "";
     const parts = [];
     for (let i = 0, len = match.length; i < len; i += 4) {
       parts.push(match.substring(i, i + 4));
@@ -179,9 +188,16 @@ export default function CheckoutModal({
               <h3 className="font-semibold">Order Summary</h3>
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {items.map((item) => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
-                    <span>{item.quantity}x {item.product.name}</span>
-                    <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                  <div
+                    key={item.product.id}
+                    className="flex justify-between text-sm"
+                  >
+                    <span>
+                      {item.quantity}x {item.product.name}
+                    </span>
+                    <span>
+                      ${(item.product.price * item.quantity).toFixed(2)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -195,14 +211,16 @@ export default function CheckoutModal({
             {/* Payment Form */}
             <div className="space-y-4">
               <h3 className="font-semibold">Payment Details</h3>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="cardholderName">Cardholder Name</Label>
                 <Input
                   id="cardholderName"
                   placeholder="John Doe"
                   value={paymentInfo.cardholderName}
-                  onChange={(e) => handleInputChange("cardholderName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("cardholderName", e.target.value)
+                  }
                 />
               </div>
 
@@ -212,7 +230,12 @@ export default function CheckoutModal({
                   id="cardNumber"
                   placeholder="1234 5678 9012 3456"
                   value={paymentInfo.cardNumber}
-                  onChange={(e) => handleInputChange("cardNumber", formatCardNumber(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "cardNumber",
+                      formatCardNumber(e.target.value),
+                    )
+                  }
                   maxLength={19}
                 />
               </div>
@@ -227,7 +250,8 @@ export default function CheckoutModal({
                     onChange={(e) => {
                       let value = e.target.value.replace(/\D/g, "");
                       if (value.length >= 2) {
-                        value = value.substring(0, 2) + "/" + value.substring(2, 4);
+                        value =
+                          value.substring(0, 2) + "/" + value.substring(2, 4);
                       }
                       handleInputChange("expiryDate", value);
                     }}
@@ -240,18 +264,19 @@ export default function CheckoutModal({
                     id="cvv"
                     placeholder="123"
                     value={paymentInfo.cvv}
-                    onChange={(e) => handleInputChange("cvv", e.target.value.replace(/\D/g, ""))}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "cvv",
+                        e.target.value.replace(/\D/g, ""),
+                      )
+                    }
                     maxLength={3}
                   />
                 </div>
               </div>
             </div>
 
-            <Button 
-              onClick={handleSubmit}
-              className="w-full"
-              variant="cart"
-            >
+            <Button onClick={handleSubmit} className="w-full" variant="cart">
               Review Order
             </Button>
           </div>
@@ -269,9 +294,16 @@ export default function CheckoutModal({
             <div className="bg-muted p-4 rounded-lg space-y-3">
               <div className="space-y-2">
                 {items.map((item) => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
-                    <span>{item.quantity}x {item.product.name}</span>
-                    <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                  <div
+                    key={item.product.id}
+                    className="flex justify-between text-sm"
+                  >
+                    <span>
+                      {item.quantity}x {item.product.name}
+                    </span>
+                    <span>
+                      ${(item.product.price * item.quantity).toFixed(2)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -286,15 +318,15 @@ export default function CheckoutModal({
             </div>
 
             <div className="flex space-x-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowConfirmation(false)}
                 className="flex-1"
                 disabled={isProcessing}
               >
                 Back
               </Button>
-              <Button 
+              <Button
                 onClick={handleConfirmOrder}
                 className="flex-1"
                 variant="success"

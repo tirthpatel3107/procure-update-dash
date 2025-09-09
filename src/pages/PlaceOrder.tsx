@@ -10,32 +10,40 @@ export default function PlaceOrder() {
   const { products } = useAppContext();
 
   const addToCart = (newItem: CartItem) => {
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item.product.id === newItem.product.id);
-      
+    setCartItems((prev) => {
+      const existingItem = prev.find(
+        (item) => item.product.id === newItem.product.id,
+      );
+
       if (existingItem) {
-        return prev.map(item =>
+        return prev.map((item) =>
           item.product.id === newItem.product.id
-            ? { ...item, quantity: Math.min(item.quantity + newItem.quantity, item.product.stock) }
-            : item
+            ? {
+                ...item,
+                quantity: Math.min(
+                  item.quantity + newItem.quantity,
+                  item.product.stock,
+                ),
+              }
+            : item,
         );
       }
-      
+
       return [...prev, newItem];
     });
   };
 
   const removeFromCart = (productId: string) => {
-    setCartItems(prev => prev.filter(item => item.product.id !== productId));
+    setCartItems((prev) =>
+      prev.filter((item) => item.product.id !== productId),
+    );
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.product.id === productId
-          ? { ...item, quantity }
-          : item
-      )
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item,
+      ),
     );
   };
 
@@ -45,21 +53,27 @@ export default function PlaceOrder() {
 
   // Sync cart items with current product stock
   useEffect(() => {
-    setCartItems(prev => 
-      prev.map(cartItem => {
-        const currentProduct = products.find(p => p.id === cartItem.product.id);
-        if (currentProduct) {
-          return {
-            ...cartItem,
-            product: currentProduct,
-            quantity: Math.min(cartItem.quantity, currentProduct.stock)
-          };
-        }
-        return cartItem;
-      }).filter(cartItem => {
-        const currentProduct = products.find(p => p.id === cartItem.product.id);
-        return currentProduct && currentProduct.stock > 0;
-      })
+    setCartItems((prev) =>
+      prev
+        .map((cartItem) => {
+          const currentProduct = products.find(
+            (p) => p.id === cartItem.product.id,
+          );
+          if (currentProduct) {
+            return {
+              ...cartItem,
+              product: currentProduct,
+              quantity: Math.min(cartItem.quantity, currentProduct.stock),
+            };
+          }
+          return cartItem;
+        })
+        .filter((cartItem) => {
+          const currentProduct = products.find(
+            (p) => p.id === cartItem.product.id,
+          );
+          return currentProduct && currentProduct.stock > 0;
+        }),
     );
   }, [products]);
 
@@ -73,7 +87,8 @@ export default function PlaceOrder() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Place Your Order</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Browse our premium collection of tech products and add them to your cart for a seamless shopping experience.
+            Browse our premium collection of tech products and add them to your
+            cart for a seamless shopping experience.
           </p>
         </div>
 
@@ -89,7 +104,7 @@ export default function PlaceOrder() {
                 Stock levels are updated in real-time from inventory management
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {products.map((product) => (
                 <ProductCard

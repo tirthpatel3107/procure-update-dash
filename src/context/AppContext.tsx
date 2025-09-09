@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { Product, CartItem, Order, StockUpdate } from '@/types';
-import { mockProducts, mockOrders } from '@/data/mockData';
+import { createContext, useContext, useState, ReactNode } from "react";
+import { Product, CartItem, Order, StockUpdate } from "@/types";
+import { mockProducts, mockOrders } from "@/data/mockData";
 
 interface User {
   id: string;
@@ -26,8 +26,9 @@ const defaultUser: User = {
   id: "user-1",
   name: "John Doe",
   email: "john.doe@storepro.com",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-  role: "Store Manager"
+  avatar:
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+  role: "Store Manager",
 };
 
 export function AppProvider({ children }: { children: ReactNode }) {
@@ -37,37 +38,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentUser] = useState<User>(defaultUser);
 
   const updateProductStock = (productId: string, newStock: number) => {
-    setProducts(prev => {
-      const updated = prev.map(product => 
-        product.id === productId 
-          ? { ...product, stock: newStock }
-          : product
+    setProducts((prev) => {
+      const updated = prev.map((product) =>
+        product.id === productId ? { ...product, stock: newStock } : product,
       );
 
-      const updatedProduct = updated.find(p => p.id === productId);
-      console.log(`Context: Updated ${updatedProduct?.name} stock to ${newStock}`);
+      const updatedProduct = updated.find((p) => p.id === productId);
+      console.log(
+        `Context: Updated ${updatedProduct?.name} stock to ${newStock}`,
+      );
       return updated;
     });
   };
 
   const addOrder = (order: Order) => {
-    setOrders(prev => [order, ...prev]);
+    setOrders((prev) => [order, ...prev]);
   };
 
   const addStockUpdate = (update: StockUpdate) => {
-    setStockUpdates(prev => [update, ...prev]);
+    setStockUpdates((prev) => [update, ...prev]);
   };
 
   return (
-    <AppContext.Provider value={{
-      products,
-      orders,
-      stockUpdates,
-      currentUser,
-      updateProductStock,
-      addOrder,
-      addStockUpdate
-    }}>
+    <AppContext.Provider
+      value={{
+        products,
+        orders,
+        stockUpdates,
+        currentUser,
+        updateProductStock,
+        addOrder,
+        addStockUpdate,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
@@ -76,7 +79,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 export function useAppContext() {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
 }

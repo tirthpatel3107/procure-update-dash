@@ -14,17 +14,28 @@ interface CartProps {
   onClearCart: () => void;
 }
 
-export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCart }: CartProps) {
+export default function Cart({
+  items,
+  onRemoveItem,
+  onUpdateQuantity,
+  onClearCart,
+}: CartProps) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0,
+  );
   const tax = subtotal * 0.1; // 10% tax
   const total = subtotal + tax;
 
   const handleQuantityChange = (productId: string, change: number) => {
-    const item = items.find(i => i.product.id === productId);
+    const item = items.find((i) => i.product.id === productId);
     if (item) {
-      const newQuantity = Math.max(1, Math.min(item.quantity + change, item.product.stock));
+      const newQuantity = Math.max(
+        1,
+        Math.min(item.quantity + change, item.product.stock),
+      );
       onUpdateQuantity(productId, newQuantity);
     }
   };
@@ -34,7 +45,9 @@ export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCar
       <Card className="p-8 text-center bg-gradient-card shadow-soft">
         <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
         <h3 className="text-lg font-semibold mb-2">Your cart is empty</h3>
-        <p className="text-muted-foreground">Add some products to get started!</p>
+        <p className="text-muted-foreground">
+          Add some products to get started!
+        </p>
       </Card>
     );
   }
@@ -53,20 +66,25 @@ export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCar
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {items.map((item) => (
-              <div key={item.product.id} className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 p-4 bg-background rounded-lg border">
+              <div
+                key={item.product.id}
+                className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 p-4 bg-background rounded-lg border"
+              >
                 <img
                   src={item.product.image}
                   alt={item.product.name}
                   className="h-16 w-16 object-cover rounded-md flex-shrink-0"
                 />
-                        <div className="flex-1 min-w-0 w-full sm:w-auto">
-                          <h4 className="font-medium truncate mb-2">{item.product.name}</h4>
-                          {item.product.stock < 5 && (
-                            <p className="text-xs text-orange-600 mb-1">
-                              Only {item.product.stock} left in stock
-                            </p>
-                          )}
-                          <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
+                <div className="flex-1 min-w-0 w-full sm:w-auto">
+                  <h4 className="font-medium truncate mb-2">
+                    {item.product.name}
+                  </h4>
+                  {item.product.stock < 5 && (
+                    <p className="text-xs text-orange-600 mb-1">
+                      Only {item.product.stock} left in stock
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="outline"
@@ -135,11 +153,7 @@ export default function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCar
           </div>
 
           <div className="flex space-x-3 mt-6">
-            <Button
-              variant="outline"
-              onClick={onClearCart}
-              className="flex-1"
-            >
+            <Button variant="outline" onClick={onClearCart} className="flex-1">
               Clear Cart
             </Button>
             <Button

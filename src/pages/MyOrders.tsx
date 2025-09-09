@@ -4,8 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Order } from "@/types";
 import { useAppContext } from "@/context/AppContext";
@@ -31,16 +42,17 @@ export default function MyOrders() {
     let filtered = orders;
 
     if (search) {
-      filtered = filtered.filter(order =>
-        order.id.toLowerCase().includes(search.toLowerCase()) ||
-        order.items.some(item => 
-          item.product.name.toLowerCase().includes(search.toLowerCase())
-        )
+      filtered = filtered.filter(
+        (order) =>
+          order.id.toLowerCase().includes(search.toLowerCase()) ||
+          order.items.some((item) =>
+            item.product.name.toLowerCase().includes(search.toLowerCase()),
+          ),
       );
     }
 
     if (status !== "all") {
-      filtered = filtered.filter(order => order.status === status);
+      filtered = filtered.filter((order) => order.status === status);
     }
 
     setFilteredOrders(filtered);
@@ -48,24 +60,24 @@ export default function MyOrders() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed':
-        return 'success';
-      case 'processing':
-        return 'default';
-      case 'pending':
-        return 'warning';
-      case 'cancelled':
-        return 'destructive';
+      case "completed":
+        return "success";
+      case "processing":
+        return "default";
+      case "pending":
+        return "warning";
+      case "cancelled":
+        return "destructive";
       default:
-        return 'secondary';
+        return "secondary";
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -79,7 +91,8 @@ export default function MyOrders() {
           </div>
           <h1 className="text-4xl font-bold mb-4">My Orders</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Track and manage all your orders in one place. View order details, status updates, and delivery information.
+            Track and manage all your orders in one place. View order details,
+            status updates, and delivery information.
           </p>
         </div>
 
@@ -120,46 +133,53 @@ export default function MyOrders() {
               <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold mb-2">No orders found</h3>
               <p className="text-muted-foreground">
-                {searchTerm || statusFilter !== "all" 
+                {searchTerm || statusFilter !== "all"
                   ? "Try adjusting your search or filter criteria"
                   : "You haven't placed any orders yet"}
               </p>
             </Card>
           ) : (
             filteredOrders.map((order) => (
-              <Card key={order.id} className="p-6 bg-gradient-card shadow-soft border-0 hover:shadow-medium transition-all duration-200">
+              <Card
+                key={order.id}
+                className="p-6 bg-gradient-card shadow-soft border-0 hover:shadow-medium transition-all duration-200"
+              >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-semibold">{order.id}</h3>
                       <Badge variant={getStatusColor(order.status) as any}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        {order.status.charAt(0).toUpperCase() +
+                          order.status.slice(1)}
                       </Badge>
                     </div>
-                    
+
                     {order.customerName && (
                       <div className="flex items-center text-sm text-muted-foreground">
                         <User className="h-4 w-4 mr-1" />
                         <span>Customer: {order.customerName}</span>
                       </div>
                     )}
-                    
+
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         {formatDate(order.date)}
                       </div>
                       <div>
-                        {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                        {order.items.length} item
+                        {order.items.length !== 1 ? "s" : ""}
                       </div>
-                      <div>
-                        Payment: {order.paymentMethod}
-                      </div>
+                      <div>Payment: {order.paymentMethod}</div>
                     </div>
 
                     <div className="text-sm text-muted-foreground">
-                      {order.items.slice(0, 2).map(item => item.product.name).join(', ')}
-                      {order.items.length > 2 && ` +${order.items.length - 2} more`}
+                      {order.items
+                        .slice(0, 2)
+                        .map((item) => item.product.name)
+                        .join(", ")}
+                      {order.items.length > 2 &&
+                        ` +${order.items.length - 2} more`}
                     </div>
                   </div>
 
@@ -169,7 +189,7 @@ export default function MyOrders() {
                         ${order.total.toFixed(2)}
                       </div>
                     </div>
-                    
+
                     <Button
                       variant="outline"
                       onClick={() => setSelectedOrder(order)}
@@ -186,7 +206,10 @@ export default function MyOrders() {
         </div>
 
         {/* Order Details Modal */}
-        <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+        <Dialog
+          open={!!selectedOrder}
+          onOpenChange={() => setSelectedOrder(null)}
+        >
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
@@ -200,33 +223,50 @@ export default function MyOrders() {
                 {/* Order Info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Order Date</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Order Date
+                    </label>
                     <p className="text-sm">{formatDate(selectedOrder.date)}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Status</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Status
+                    </label>
                     <div className="mt-1">
-                      <Badge variant={getStatusColor(selectedOrder.status) as any}>
-                        {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
+                      <Badge
+                        variant={getStatusColor(selectedOrder.status) as any}
+                      >
+                        {selectedOrder.status.charAt(0).toUpperCase() +
+                          selectedOrder.status.slice(1)}
                       </Badge>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Payment Method</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Payment Method
+                    </label>
                     <p className="text-sm">{selectedOrder.paymentMethod}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Total Amount</label>
-                    <p className="text-sm font-semibold">${selectedOrder.total.toFixed(2)}</p>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Total Amount
+                    </label>
+                    <p className="text-sm font-semibold">
+                      ${selectedOrder.total.toFixed(2)}
+                    </p>
                   </div>
                   {selectedOrder.customerName && (
                     <>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Customer Name</label>
+                        <label className="text-sm font-medium text-muted-foreground">
+                          Customer Name
+                        </label>
                         <p className="text-sm">{selectedOrder.customerName}</p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Customer Email</label>
+                        <label className="text-sm font-medium text-muted-foreground">
+                          Customer Email
+                        </label>
                         <p className="text-sm">{selectedOrder.customerEmail}</p>
                       </div>
                     </>
@@ -240,7 +280,10 @@ export default function MyOrders() {
                   <h3 className="font-semibold mb-4">Order Items</h3>
                   <div className="space-y-3">
                     {selectedOrder.items.map((item) => (
-                      <div key={item.product.id} className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
+                      <div
+                        key={item.product.id}
+                        className="flex items-center space-x-4 p-4 bg-muted rounded-lg"
+                      >
                         <img
                           src={item.product.image}
                           alt={item.product.name}

@@ -37,7 +37,7 @@ export default function Layout() {
                       "hover:bg-accent hover:text-accent-foreground",
                       isActive
                         ? "bg-primary text-primary-foreground shadow-soft"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )
                   }
                 >
@@ -78,7 +78,7 @@ export default function Layout() {
                       "hover:bg-accent hover:text-accent-foreground",
                       isActive
                         ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )
                   }
                 >

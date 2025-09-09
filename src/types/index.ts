@@ -16,7 +16,7 @@ export interface Order {
   id: string;
   items: CartItem[];
   total: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  status: "pending" | "processing" | "completed" | "cancelled";
   date: string;
   paymentMethod: string;
   customerName?: string;
@@ -30,7 +30,7 @@ export interface StockUpdate {
   currentBalance: number;
   updateQuantity: number;
   newBalance: number;
-  reason: 'loadout' | 'return' | 'damage' | 'adjustment' | 'closing-balance';
+  reason: "loadout" | "return" | "damage" | "adjustment" | "closing-balance";
   date: string;
   shift: string;
   updatedBy?: string;

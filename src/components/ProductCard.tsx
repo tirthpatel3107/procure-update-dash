@@ -11,9 +11,12 @@ interface ProductCardProps {
   onAddToCart: (item: CartItem) => void;
 }
 
-export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  onAddToCart,
+}: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
-  
+
   console.log(`ProductCard: ${product.name} stock is ${product.stock}`);
 
   const handleAddToCart = () => {
@@ -36,13 +39,13 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
 
   const incrementQuantity = () => {
     if (quantity < product.stock) {
-      setQuantity(prev => prev + 1);
+      setQuantity((prev) => prev + 1);
     }
   };
 
   const decrementQuantity = () => {
     if (quantity > 1) {
-      setQuantity(prev => prev - 1);
+      setQuantity((prev) => prev - 1);
     }
   };
 
@@ -61,14 +64,16 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <h3 className="font-semibold text-lg leading-tight">{product.name}</h3>
+            <h3 className="font-semibold text-lg leading-tight">
+              {product.name}
+            </h3>
             {product.description && (
               <p className="text-sm text-muted-foreground line-clamp-2">
                 {product.description}
               </p>
             )}
           </div>
-          <Badge 
+          <Badge
             variant={product.stock < 10 ? "destructive" : "secondary"}
             className="ml-2 shrink-0"
           >

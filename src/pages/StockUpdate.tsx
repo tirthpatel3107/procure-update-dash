@@ -53,7 +53,7 @@ export default function StockUpdate() {
   const [shift, setShift] = useState("day");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingUpdate, setPendingUpdate] = useState<StockUpdateType | null>(
-    null
+    null,
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -130,7 +130,7 @@ export default function StockUpdate() {
 
     // Debug: Log the update
     console.log(
-      `Stock updated for ${pendingUpdate.productName}: ${pendingUpdate.currentBalance} → ${pendingUpdate.newBalance}`
+      `Stock updated for ${pendingUpdate.productName}: ${pendingUpdate.currentBalance} → ${pendingUpdate.newBalance}`,
     );
 
     // Simulate API call
@@ -285,7 +285,7 @@ export default function StockUpdate() {
                           className={cn(
                             "w-full justify-start text-left font-normal",
                             !selectedDate && "text-muted-foreground",
-                            errors.date ? "border-destructive" : ""
+                            errors.date ? "border-destructive" : "",
                           )}
                         >
                           {selectedDate ? (
